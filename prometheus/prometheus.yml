@@ -3,6 +3,16 @@ global:
   evaluation_interval: 15s
 
 scrape_configs:
+  - job_name: 'kafka'
+    static_configs:
+      - targets: [ 'kafka:1234' ]
+  - job_name: 'kafka UI'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 3s
+    static_configs:
+      - targets: [ 'kafka-ui:8080' ]
+        labels:
+          application: 'Kafka UI'
   - job_name: 'application'
     metrics_path: '/actuator/prometheus'
     scrape_interval: 3s
