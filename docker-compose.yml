@@ -24,25 +24,25 @@ services:
     networks:
       - monitoring
 
-  node-exporter:
-    image: quay.io/prometheus/node-exporter:latest
-    ports:
-      - '9100:9100'
-    networks:
-      - monitoring
+  #  node-exporter:
+  #    image: quay.io/prometheus/node-exporter:latest
+  #    ports:
+  #      - '9100:9100'
+  #    networks:
+  #      - monitoring
 
-  postgres:
-    image: postgres:latest
-    environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-      POSTGRES_DB: common_db
-    ports:
-      - '5433:5432'
-    networks:
-      - monitoring
-    volumes:
-      - pg-data:/var/lib/postgresql/data
+  #  postgres:
+  #    image: postgres:latest
+  #    environment:
+  #      POSTGRES_USER: myuser
+  #      POSTGRES_PASSWORD: mypassword
+  #      POSTGRES_DB: common_db
+  #    ports:
+  #      - '5433:5432'
+  #    networks:
+  #      - monitoring
+  #    volumes:
+  #      - pg-data:/var/lib/postgresql/data
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -92,6 +92,16 @@ services:
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
     ports:
       - "9000:8080"
+    depends_on:
+      - kafka
+    networks:
+      - monitoring
+
+  kafka-exporter:
+    image: bitnami/kafka-exporter:latest
+    command: [ "--kafka.server=kafka:9092" ]
+    ports:
+      - "9308:9308"
     depends_on:
       - kafka
     networks:
